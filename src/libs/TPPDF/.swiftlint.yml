@@ -1,0 +1,74 @@
+---
+disabled_rules:
+  - large_tuple
+  - todo
+  - inclusive_language
+  - trailing_comma
+excluded:
+  - Carthage
+  - Pods
+  - Dangerfile.swift
+opt_in_rules:
+  - array_init
+  - closure_body_length
+  - closure_spacing
+  - collection_alignment
+  - convenience_type
+  - empty_count
+  - empty_string
+  - file_header
+  - first_where
+  - last_where
+  - implicit_return
+  - joined_default_parameter
+  - let_var_whitespace
+  - lower_acl_than_parent
+  - mark
+  - missing_docs
+  - modifier_order
+  - multiline_function_chains
+  - redundant_nil_coalescing
+  - static_operator
+analyzer_rules:
+  - explicit_self
+file_header:
+  required_pattern: |
+    \/\/
+    \/\/  .*?\.swift
+    \/\/  TPPDF
+    \/\/
+    \/\/  (Created by .*? on \d{2}\.\d{2}\.\d{4}\.)
+    \/\/  Copyright © \d{4}-\d{4} techprimate GmbH. All rights reserved\.
+    \/\/
+file_length:
+  error: 1200
+  warning: 500
+force_cast: warning
+force_try:
+  severity: warning
+identifier_name:
+  excluded:
+    - id
+    - x
+    - y
+    - i
+  min_length:
+    error: 2
+    warning: 2
+included:
+  - Example*
+  - Shared*
+  - Source
+  - Tests
+line_length: 150
+reporter: xcode
+type_body_length:
+  - 300
+  - 400
+type_name:
+  max_length:
+    error: 60
+    warning: 50
+  min_length: 2
+  allowed_symbols:
+    - _

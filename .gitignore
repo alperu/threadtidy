@@ -1,0 +1,53 @@
+# macOS
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+
+# Swift Package Manager / Xcode build state
+.build/
+.swiftpm/
+Package.resolved
+build/DerivedData/
+build/test_output.*
+*.xcuserstate
+xcuserdata/
+*.xcworkspace/xcuserdata/
+
+# Generated app bundles, archives, and notarization artifacts.
+# build/builds/ and build/deploy/ hold large compiled .app bundles and
+# release zips produced locally by script/build-app.sh — these are
+# rebuilt on demand and must never be committed.
+build/builds/
+build/deploy/
+build/metallib/
+build/*.app
+build/*.zip
+build/GmailPrint.pdf
+*.app
+*.xcarchive
+*.dSYM
+*.dSYM.zip
+*.zip
+notarize.log
+
+# JetBrains / VS Code
+.idea/
+.vscode/
+
+# Local caches
+.cache/
+
+# resource/ holds sample input PDFs and generated output kept locally for
+# manual testing. The directory stays (empty) in the tree but its contents
+# are never committed — they may contain private email PDFs.
+resource/
+
+# Temp / produced PDFs at project root (written under tmp at runtime)
+/tmp/
+/clean_email_thread.pdf
+
+# Note: build/version/BUILD_NUMBER IS tracked on purpose so the build
+# number is monotonic across machines and CI. Do not ignore it.
+!build/version/
+!build/version/BUILD_NUMBER

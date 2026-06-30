@@ -1,0 +1,10 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "dependencyDashboard": true,
+  "dependencyDashboardAutoclose": false,
+  "extends": ["config:recommended"],
+  "keepUpdatedLabel": "renovate:keep-updated",
+  "rebaseLabel": "renovate:rebase",
+  "stopUpdatingLabel": "renovate:disabled",
+  "timezone": "Europe/Vienna"
+}

@@ -1,0 +1,54 @@
+name: Documentation
+
+on:
+  release:
+    types: [published]
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy_docs:
+    name: Generate Documentation
+    runs-on: macos-26
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v6
+
+      - name: Install Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Patch title with GitHub reference
+        run: |
+          ESCAPED_REF_NAME=$(echo "${{ github.ref }}" | sed 's/[\/&]/\\&/g')
+          sed  -i.bak "s/title:\(.*\)/title:\1 ($ESCAPED_REF_NAME)/g" .jazzy.yaml
+
+      - name: Generate Documentation with Jazzy
+        run: make docs
+
+      - name: Fix Invalid URLs
+        run: |
+          cd docs
+          touch .nojekyll
+
+      - name: Commit documentation files
+        if: github.event_name != 'pull_request'
+        run: |
+          cd docs
+          git init
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit -m "Deploying Updated Jazzy Docs"
+
+      - name: Push changes to GitHub Pages
+        uses: ad-m/github-push-action@v1
+        if: github.event_name != 'pull_request'
+        with:
+          directory: docs
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: gh-pages
+          force: true

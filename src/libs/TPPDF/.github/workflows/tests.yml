@@ -1,0 +1,65 @@
+name: Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  unit-tests:
+    name: Unit Tests (${{ matrix.build.name }})
+    runs-on: macos-26
+    timeout-minutes: 30
+    strategy:
+      matrix:
+        build:
+          - name: iOS
+            action: test-ios
+            logfiles: raw-*-ios.log
+          - name: macOS
+            action: test-macos
+            logfiles: raw-*-macos.log
+          - name: Mac Catalyst
+            action: test-maccatalyst
+            logfiles: raw-*-maccatalyst.log
+          - name: tvOS
+            action: test-tvos
+            logfiles: raw-*-tvos.log
+            platform: tvOS
+          - name: watchOS
+            action: test-watchos
+            logfiles: raw-*-watchos.log
+            platform: watchOS
+          - name: visionOS
+            action: test-visionos
+            logfiles: raw-*-visionos.log
+            platform: visionOS
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v6
+
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: "26.2"
+
+      - name: Ensuring required simulator runtimes are loaded
+        if: matrix.build.platform != null
+        run: scripts/ensure-runtime-loaded.sh --os-version 26.2 --platform ${{ matrix.build.platform }}
+
+      - name: Run Tests
+        run: make ${{ matrix.build.action }}
+
+      - name: Upload test log file on error
+        uses: actions/upload-artifact@v6
+        if: failure()
+        with:
+          name: Test Logs - ${{ matrix.build.name }}
+          path: ${{ matrix.build.logfiles }}
