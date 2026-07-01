@@ -25,7 +25,28 @@ permissions:
   contents: write  # needed to upload assets to the GitHub Release
 
 jobs:
+  # Cheap preflight so the workflow skips cleanly (neutral, not a red X)
+  # when signing secrets aren't configured — e.g. when a release is
+  # published locally via `./script/build-app.sh --notarize` instead of CI.
+  preflight:
+    runs-on: ubuntu-latest
+    outputs:
+      signed: ${{ steps.check.outputs.signed }}
+    steps:
+      - id: check
+        env:
+          SIGN_IDENTITY: ${{ secrets.SIGN_IDENTITY }}
+        run: |
+          if [ -n "$SIGN_IDENTITY" ]; then
+            echo "signed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "signed=false" >> "$GITHUB_OUTPUT"
+            echo "No SIGN_IDENTITY secret configured — skipping CI signed release." >&2
+          fi
+
   release:
+    needs: preflight
+    if: ${{ needs.preflight.outputs.signed == 'true' }}
     runs-on: macos-14  # Apple Silicon runner
     steps:
       - name: Checkout
