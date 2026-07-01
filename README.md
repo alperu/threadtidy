@@ -3,8 +3,10 @@
 ThreadTidy is a native macOS app that turns a noisy Gmail "Print all"
 PDF into a clean, court-ready threaded PDF. Drag the dirty PDF onto the
 drop zone and ThreadTidy rebuilds the conversation as a tidy document:
-a title, a date range, a numbered message timeline, and one clean entry
-per message. It preserves **every word the senders wrote** — To, Cc,
+a title page with a numbered **Index of Communications**, then one clean
+entry per message — each on its own page with a **clickable navigation
+strip** (`1 2 [3] 4 5`) so a reviewer can jump straight to any message
+and back to the index. It preserves **every word the senders wrote** — To, Cc,
 Bcc, timestamps, signatures, attachment listings, and inline styling
 (bold, italic, underline, hyperlinks). It strips **only** print chrome:
 page headers and footers, the Gmail logo, `[Quoted text hidden]`
@@ -27,12 +29,15 @@ result reads like the conversation actually happened, in order, once.
 
 ## What the cleaned thread looks like
 
-The layout below is a **synthetic illustration** — fictional names and
-content, not a screenshot and not a real email. It shows how ThreadTidy
-arranges a cleaned thread on the page: a document title, the date range
-the thread spans, a numbered timeline, then one stacked-header entry per
-message with the body underneath, attachment listings rendered as
-filename plus size, and inline styling preserved.
+The pages below are a **synthetic illustration** — fictional names and
+content, not a screenshot and not a real email. They show the two kinds
+of page ThreadTidy produces: a title page with a numbered **Index of
+Communications**, and one page per message. In the produced PDF **every
+ordinal is a live link** — click a number to jump to that message, click
+**Index** to jump back — so a court reader can navigate a long thread
+without scrolling.
+
+**Page 1 — Index of Communications** (one numbered row per message):
 
 ```
 ┌──────────────────────────────────────────────────────────────────────┐
@@ -40,18 +45,31 @@ filename plus size, and inline styling preserved.
 │                  Re: Project Falcon — kickoff schedule                 │
 │                    Apr 28, 2026  –  Apr 30, 2026                        │
 │                                                                        │
-│   Timeline                                                             │
-│     1.  Apr 28, 2026 8:12 AM   Jane Doe        Re: Project Falcon …    │
-│     2.  Apr 29, 2026 9:03 AM   John Smith      Re: Project Falcon …    │
-│     3.  Apr 30, 2026 8:38 AM   Jane Doe        Re: Project Falcon …    │
+│   Index of Communications                                              │
+│     1.  Apr 28, 2026  8:12 AM   Jane Doe    → John Smith   Re: Falcon… │
+│     2.  Apr 29, 2026  9:03 AM   John Smith  → Jane Doe     Re: Falcon… │
+│     3.  Apr 30, 2026  8:38 AM   Jane Doe    → John Smith   Re: Falcon… │
+│     4.  Apr 30, 2026 10:15 AM   John Smith  → Jane Doe     Re: Falcon… │
+│     5.  Apr 30, 2026  4:47 PM   Jane Doe    → John Smith   Re: Falcon… │
 │                                                                        │
-│   ───────────────────────────────────────────────────────────────────│
+│           (each row number links to that message's page)               │
 │                                                                        │
-│   1.                                                                   │
+└──────────────────────────────────────────────────────────────────────┘
+```
+
+**A message page** — note the navigation strip across the top: every
+ordinal `1 2 3 4 5` is listed, the current one **bold and bracketed**,
+with a jump-back link to the Index:
+
+```
+┌──────────────────────────────────────────────────────────────────────┐
+│  ↩ Index      1   2  [3]  4   5              Message 3 of 5             │
+│  ────────────────────────────────────────────────────────────────────│
+│   3.                                                                   │
 │   From:     Jane Doe <jane.doe@example.com>                            │
 │   To:       John Smith <john.smith@example.com>                        │
 │   Cc:       Team List <team@example.com>                               │
-│   Date:     Mon, Apr 28, 2026 at 8:12 AM                               │
+│   Date:     Wed, Apr 30, 2026 at 8:38 AM                               │
 │   Subject:  Re: Project Falcon — kickoff schedule                      │
 │                                                                        │
 │   Hi John,                                                             │
@@ -67,28 +85,15 @@ filename plus size, and inline styling preserved.
 │   Attachments:                                                         │
 │     • Falcon-Agenda.pdf      (84 KB)                                   │
 │     • Budget-Q2.xlsx         (212 KB)                                  │
-│                                                                        │
-│   ───────────────────────────────────────────────────────────────────│
-│                                                                        │
-│   2.                                                                   │
-│   From:     John Smith <john.smith@example.com>                        │
-│   To:       Jane Doe <jane.doe@example.com>                            │
-│   Date:     Tue, Apr 29, 2026 at 9:03 AM                               │
-│   Subject:  Re: Project Falcon — kickoff schedule                      │
-│                                                                        │
-│   Looks good. One change: let's move the budget review to the top so   │
-│   we cover it while everyone is fresh.                                 │
-│                                                                        │
-│   — John                                                              │
-│                                                                        │
 └──────────────────────────────────────────────────────────────────────┘
 ```
 
-In the real output, `**budget section**` renders as actual bold text,
+In the real output `**budget section**` renders as actual bold text,
 `_provisional_` as italic, and the URL as a live hyperlink — the ASCII
-markers above only stand in for styling that the printed page cannot
-show here. Each message keeps its full stacked header; Cc and Bcc rows
-appear only when present.
+markers above only stand in for styling the page here cannot show. Each
+message keeps its full stacked header (Cc and Bcc rows appear only when
+present), and the `1 2 [3] 4 5` strip plus every Index row number are
+clickable cross-references in the produced PDF.
 
 ## Requirements
 
